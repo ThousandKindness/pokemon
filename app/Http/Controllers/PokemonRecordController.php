@@ -1,39 +1,69 @@
-use App\Http\Resources\PokemonRecordResource;
-use App\Models\PokemonRecord;
+<?php
+
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
-class PokemonRecordController extends Controller {
+class PokemonRecordController extends Controller
+{
+    /public function getApiEntry()
+    {
+        $url = "https://pokeapi.co/api/v2/pokemon/";
+        $response = Http::get(
+            $url
+        );
+        $responseBodyClient = $response->json();
+        $externalApiEntries = $responseBodyClient['entries'];
 
-  public function index(Request $request) {
+        foreach ($externalApiEntries as $externalApiEntry) {
+            ApiEntry::updateOrInsert(
+                [
+                    'name' => $externalApiEntry['name'],
+                    'base_experience' => $externalApiEntry['base_experience'],
+                    'weight' => $externalApiEntry['weight'],
+                    'image_url' => $externalApiEntry['image_url'],
+                ],
+            );
+        }
+    }
+    
+    **
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
 
-    // Pagination for large datasets (use cursor for millions)
-    $records = PokemonRecord::query()
-    ->when($request->name, fn($q) => $q->where('name', $request->name))
-    ->when($request->base_experience, fn($q) => $q->where('base_experience', $request->base_experience))
-    ->when($request->weight, fn($q) => $q->where('weight', $request->weight))
-    ->orderBy('id')
-    ->cursorPaginate(10); // Cursor pagination for efficiency
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
 
-    return PokemonRecordResource::collection($records);
-  }
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
 
-  public function show(PokemonRecord $pokemonRecord) {
-    return new PokemonRecordResource($pokemonRecord);
-  }
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
 
-  // Add store, update, destroy as needed...
-  public function stats() {
-  // Cache aggregates for performance
-    return Cache::remember('Pokemon_stats', 3600, function () { // 1 hour
-      return [
-      'total_loss' => DB::table('deforestation_records')->sum('area_lost'),
-      'loss_by_year' => DB::table('deforestation_records')
-      ->select('year', DB::raw('SUM(area_lost) as total'))
-      ->groupBy('year')
-      ->get(),
-      ];
-    });
-  }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
 }

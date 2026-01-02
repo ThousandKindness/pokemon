@@ -9,4 +9,8 @@ class pokemon_abilities extends Model
 {
     /** @use HasFactory<\Database\Factories\PokemonAbilitiesFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+    ];
 }

@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class PokemonRecord extends Model
 {
-    /** @use HasFactory<\Database\Factories\PokemonRecordFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'Base_Experience',
+        'weight',
+        'stat',
+        'abilities',
+        'image_url'
+    ];
 }
