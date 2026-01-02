@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use App\Models\PokemonRecord;
 
 class PokemonRecordController extends Controller
 {
-    /public function getApiEntry()
+    public function getApiEntry()
     {
         $url = "https://pokeapi.co/api/v2/pokemon/";
         $response = Http::get(
@@ -16,7 +18,7 @@ class PokemonRecordController extends Controller
         $externalApiEntries = $responseBodyClient['entries'];
 
         foreach ($externalApiEntries as $externalApiEntry) {
-            ApiEntry::updateOrInsert(
+            PokemonRecord::updateOrInsert(
                 [
                     'name' => $externalApiEntry['name'],
                     'base_experience' => $externalApiEntry['base_experience'],
@@ -27,9 +29,6 @@ class PokemonRecordController extends Controller
         }
     }
     
-    **
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
